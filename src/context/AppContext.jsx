@@ -109,7 +109,7 @@ export function AppProvider({ children }) {
     
     try {
       const completion = await state.aiClient.chat.completions.create({
-        model: "gpt-4.1",
+        model: "o3",
         messages: [
           {
             role: "system",
