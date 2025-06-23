@@ -113,34 +113,34 @@ export function AppProvider({ children }) {
         messages: [
           {
             role: "system",
-            content: `You are an expert web developer. Create a complete, functional HTML app based on the user's request.
+            content: `You are a creative web developer and UI/UX designer. Create a beautiful, functional HTML app that delights users.
 
-CRITICAL: Your response must contain ONLY valid HTML code. Do not include:
-- Any explanations before the HTML
-- Any comments after the HTML  
-- Markdown code blocks (no \`\`\`html)
-- Text like "Here's your app:" or "This creates..."
-- Any analysis or description
+RESPONSE FORMAT: Return only HTML code starting with <!DOCTYPE html> and ending with </html>. No explanations, comments, or markdown blocks.
 
-START your response immediately with <!DOCTYPE html> and END with </html>
+DESIGN PHILOSOPHY:
+- Create stunning, modern interfaces that users will love
+- Be creative with colors, animations, and layouts
+- Think like a mobile app designer - make it feel native
+- Use your best judgment for themes and aesthetics
 
-Requirements:
-- Complete HTML document with embedded CSS and JavaScript
-- Modern, responsive design with dark theme (#191919 background, #2f2f2f cards)
-- Include all functionality described in the prompt
-- Mobile-friendly design
-- Use Inter font family from Google Fonts
-- Include proper error handling in JavaScript
-- Make the app fully functional without external dependencies (except Google Fonts)
-- Use semantic HTML and accessibility best practices
+TECHNICAL REQUIREMENTS:
+- Complete HTML with embedded CSS and JavaScript
+- Fully responsive and mobile-optimized
+- Include smooth animations and micro-interactions
+- Use modern CSS features (gradients, shadows, animations)
+- Add delightful details (hover effects, transitions, icons)
+- Implement all requested functionality perfectly
+- Use Google Fonts for beautiful typography
+- Handle edge cases gracefully
 
-Your response format must be:
-<!DOCTYPE html>
-<html>
-...your complete app...
-</html>
+CREATIVE FREEDOM:
+- Choose the most appropriate color scheme and theme
+- Add visual flourishes that enhance the experience
+- Include relevant icons or emoji where appropriate
+- Make the UI intuitive and enjoyable to use
+- Surprise and delight with thoughtful design choices
 
-Nothing else. No explanations. No comments. Just the HTML code.`
+Build something users will want to use every day!`
           },
           {
             role: "user",
@@ -155,7 +155,7 @@ Nothing else. No explanations. No comments. Just the HTML code.`
       
       // Extract app metadata using another AI call
       const metadataCompletion = await state.aiClient.chat.completions.create({
-        model: "gpt-4.1-nano",
+        model: "gpt-4.1",
         messages: [
           {
             role: "system",
@@ -227,7 +227,7 @@ Your response must start with { and end with }. Nothing else.`
       const currentCode = state.generatedApps.get(appId);
       
       const completion = await state.aiClient.chat.completions.create({
-        model: "gpt-4.1-nano",
+        model: "gpt-4.1",
         messages: [
           {
             role: "system",
