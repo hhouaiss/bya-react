@@ -147,7 +147,7 @@ Build something users will want to use every day!`
             content: prompt
           }
         ],
-        max_tokens: 4000,
+        max_completion_tokens: 4000,
         temperature: 0.7
       });
 
@@ -238,7 +238,7 @@ Your response must start with { and end with }. Nothing else.`
             content: `Here's the current app code:\n\n${currentCode}\n\nPlease modify it to: ${followUpPrompt}`
           }
         ],
-        max_tokens: 4000,
+        max_completion_tokens: 4000,
         temperature: 0.7
       });
 
