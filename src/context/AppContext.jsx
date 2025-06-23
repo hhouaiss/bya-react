@@ -113,18 +113,34 @@ export function AppProvider({ children }) {
         messages: [
           {
             role: "system",
-            content: `You are an expert web developer. Create a complete, functional HTML app based on the user's request. 
-            
-            Requirements:
-            - Return ONLY valid HTML code with embedded CSS and JavaScript
-            - Use modern, responsive design with dark theme (#191919 background, #2f2f2f cards)
-            - Include all functionality described in the prompt
-            - Make it mobile-friendly
-            - Use Inter font family
-            - Include proper error handling in JavaScript
-            - Make the app fully functional without external dependencies
-            
-            The HTML should be complete and ready to run in a browser.`
+            content: `You are an expert web developer. Create a complete, functional HTML app based on the user's request.
+
+CRITICAL: Your response must contain ONLY valid HTML code. Do not include:
+- Any explanations before the HTML
+- Any comments after the HTML  
+- Markdown code blocks (no \`\`\`html)
+- Text like "Here's your app:" or "This creates..."
+- Any analysis or description
+
+START your response immediately with <!DOCTYPE html> and END with </html>
+
+Requirements:
+- Complete HTML document with embedded CSS and JavaScript
+- Modern, responsive design with dark theme (#191919 background, #2f2f2f cards)
+- Include all functionality described in the prompt
+- Mobile-friendly design
+- Use Inter font family from Google Fonts
+- Include proper error handling in JavaScript
+- Make the app fully functional without external dependencies (except Google Fonts)
+- Use semantic HTML and accessibility best practices
+
+Your response format must be:
+<!DOCTYPE html>
+<html>
+...your complete app...
+</html>
+
+Nothing else. No explanations. No comments. Just the HTML code.`
           },
           {
             role: "user",
@@ -139,11 +155,20 @@ export function AppProvider({ children }) {
       
       // Extract app metadata using another AI call
       const metadataCompletion = await state.aiClient.chat.completions.create({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4.1-nano",
         messages: [
           {
             role: "system",
-            content: "Based on the user's app request, provide a JSON response with: name (short app name), description (brief description), and type (one of: todo, habit, expense, notes, or other)."
+            content: `Return ONLY a valid JSON object. No explanations. No comments. No markdown blocks.
+
+Based on the user's app request, provide this exact JSON format:
+{
+  "name": "short app name",
+  "description": "brief description", 
+  "type": "one of: todo, habit, expense, notes, calculator, timer, tracker, converter, generator, or other"
+}
+
+Your response must start with { and end with }. Nothing else.`
           },
           {
             role: "user",
@@ -202,7 +227,7 @@ export function AppProvider({ children }) {
       const currentCode = state.generatedApps.get(appId);
       
       const completion = await state.aiClient.chat.completions.create({
-        model: "gpt-4",
+        model: "gpt-4.1-nano",
         messages: [
           {
             role: "system",
