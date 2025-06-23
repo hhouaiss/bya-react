@@ -227,7 +227,7 @@ Your response must start with { and end with }. Nothing else.`
       const currentCode = state.generatedApps.get(appId);
       
       const completion = await state.aiClient.chat.completions.create({
-        model: "gpt-4.1",
+        model: "o3",
         messages: [
           {
             role: "system",
