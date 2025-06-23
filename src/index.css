@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-notion-bg text-notion-text;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .notion-card {
+    @apply bg-notion-card border border-notion-border rounded-lg p-4 transition-all duration-200 hover:border-notion-accent/50;
+  }
+  
+  .notion-button {
+    @apply bg-notion-accent text-white px-4 py-2 rounded-md font-medium transition-all duration-200 hover:bg-notion-accent/80 active:scale-95;
+  }
+  
+  .notion-input {
+    @apply bg-notion-card border border-notion-border rounded-md px-3 py-2 text-notion-text placeholder-notion-muted focus:border-notion-accent focus:ring-1 focus:ring-notion-accent;
+  }
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 768px) {
+  .container {
+    @apply px-4;
+  }
+}
+
+/* Custom scrollbar for mobile */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-notion-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-notion-border rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-notion-muted;
+}
