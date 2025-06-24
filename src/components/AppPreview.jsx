@@ -39,9 +39,9 @@ function AppPreview() {
     }
   }, [currentApp, appId, savedApps, saveCurrentApp]);
 
-  // Get app content
-  const appContent = generatedApps.get(appId);
+  // Get app content - prioritize saved app code over generatedApps Map
   const appData = currentApp?.id === appId ? currentApp : savedApps.find(app => app.id === appId);
+  const appContent = appData?.code || generatedApps.get(appId);
 
   /**
    * Navigate back to home screen
