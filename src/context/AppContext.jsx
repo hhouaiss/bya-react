@@ -202,6 +202,8 @@ Your response must start with { and end with }. Nothing else.`
 
       dispatch({ type: ActionTypes.SET_GENERATED_APP, payload: { id: appId, content: generatedCode } });
       dispatch({ type: ActionTypes.SET_CURRENT_APP, payload: appData });
+      // Automatically save to "My Apps"
+      dispatch({ type: ActionTypes.ADD_APP, payload: appData });
       
       return appData;
     } catch (error) {

@@ -3,13 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeftIcon,
-  HeartIcon,
   CodeBracketIcon,
   ChatBubbleLeftRightIcon,
-  DocumentDuplicateIcon,
-  CheckIcon
+  HomeIcon,
+  CogIcon
 } from '@heroicons/react/24/outline';
-import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { useApp } from '../context/AppContext';
 import FollowUpModal from './FollowUpModal';
 import CodeModal from './CodeModal';
@@ -32,27 +30,24 @@ function AppPreview() {
   
   const [showFollowUpModal, setShowFollowUpModal] = useState(false);
   const [showCodeModal, setShowCodeModal] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
-  const [copiedCode, setCopiedCode] = useState(false);
+  const [showSettingsMenu, setShowSettingsMenu] = useState(false);
 
-  // Check if app is saved
+  // Auto-register generated apps to "My Apps" when component mounts
   useEffect(() => {
-    const isAppSaved = savedApps.some(app => app.id === appId);
-    setIsSaved(isAppSaved);
-  }, [savedApps, appId]);
+    if (currentApp?.id === appId && !savedApps.some(app => app.id === appId)) {
+      saveCurrentApp();
+    }
+  }, [currentApp, appId, savedApps, saveCurrentApp]);
 
   // Get app content
   const appContent = generatedApps.get(appId);
   const appData = currentApp?.id === appId ? currentApp : savedApps.find(app => app.id === appId);
 
   /**
-   * Handle saving the current app
+   * Navigate back to home screen
    */
-  const handleSaveApp = () => {
-    if (!isSaved && currentApp) {
-      saveCurrentApp();
-      setIsSaved(true);
-    }
+  const handleBackToHome = () => {
+    navigate('/');
   };
 
   /**
@@ -68,18 +63,10 @@ function AppPreview() {
   };
 
   /**
-   * Copy app code to clipboard
+   * Toggle settings menu
    */
-  const handleCopyCode = async () => {
-    if (appContent) {
-      try {
-        await navigator.clipboard.writeText(appContent);
-        setCopiedCode(true);
-        setTimeout(() => setCopiedCode(false), 2000);
-      } catch (error) {
-        console.error('Failed to copy code:', error);
-      }
-    }
+  const toggleSettingsMenu = () => {
+    setShowSettingsMenu(!showSettingsMenu);
   };
 
   if (!appData || !appContent) {
@@ -100,21 +87,20 @@ function AppPreview() {
       exit={{ opacity: 0 }}
       className="min-h-screen bg-notion-bg relative"
     >
-      {/* Header */}
-      <div className="sticky top-0 z-40 bg-notion-bg/80 backdrop-blur-sm border-b border-notion-border">
-        <div className="flex items-center justify-between p-4">
-          <div className="flex items-center gap-3">
+      {/* Minimal header - hidden by default for native app feel */}
+      <div className="absolute top-0 left-0 right-0 z-40 bg-black/20 backdrop-blur-sm opacity-0 hover:opacity-100 transition-opacity duration-300">
+        <div className="flex items-center justify-between p-2">
+          <div className="flex items-center gap-2">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate(-1)}
-              className="p-2 rounded-lg bg-notion-card border border-notion-border hover:border-notion-accent/50 transition-all duration-200"
+              className="p-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-all duration-200"
             >
-              <ArrowLeftIcon className="w-5 h-5 text-notion-text" />
+              <ArrowLeftIcon className="w-4 h-4" />
             </motion.button>
             <div>
-              <h1 className="font-semibold text-notion-text">{appData.name}</h1>
-              <p className="text-notion-muted text-sm">{appData.description}</p>
+              <h1 className="font-medium text-white text-sm">{appData.name}</h1>
             </div>
           </div>
         </div>
@@ -130,72 +116,82 @@ function AppPreview() {
         />
       </div>
 
-      {/* Floating Action Menu */}
-      <div className="fixed bottom-6 right-4 z-50">
-        <div className="flex flex-col gap-3">
-          {/* Follow Up Button */}
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setShowFollowUpModal(true)}
-            disabled={isGenerating}
-            className="w-12 h-12 bg-notion-accent text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center disabled:opacity-50"
-          >
-            <ChatBubbleLeftRightIcon className="w-5 h-5" />
-          </motion.button>
+      {/* Floating Settings Button */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <AnimatePresence>
+          {showSettingsMenu && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 20 }}
+              className="absolute bottom-16 right-0 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden min-w-[200px]"
+            >
+              {/* Follow Up */}
+              <motion.button
+                whileHover={{ backgroundColor: '#f8fafc' }}
+                onClick={() => {
+                  setShowFollowUpModal(true);
+                  setShowSettingsMenu(false);
+                }}
+                disabled={isGenerating}
+                className="w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChatBubbleLeftRightIcon className="w-5 h-5 text-blue-600" />
+                <span className="text-gray-800 font-medium">Follow Up</span>
+              </motion.button>
 
-          {/* Save Button */}
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={handleSaveApp}
-            disabled={isSaved}
-            className={`
-              w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center
-              ${isSaved 
-                ? 'bg-green-500 text-white' 
-                : 'bg-notion-card border border-notion-border text-notion-text hover:border-notion-accent/50'
-              }
-            `}
-          >
-            {isSaved ? (
-              <HeartSolidIcon className="w-5 h-5" />
-            ) : (
-              <HeartIcon className="w-5 h-5" />
-            )}
-          </motion.button>
+              {/* See Code */}
+              <motion.button
+                whileHover={{ backgroundColor: '#f8fafc' }}
+                onClick={() => {
+                  setShowCodeModal(true);
+                  setShowSettingsMenu(false);
+                }}
+                className="w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-gray-50 transition-colors border-t border-gray-100"
+              >
+                <CodeBracketIcon className="w-5 h-5 text-green-600" />
+                <span className="text-gray-800 font-medium">See Code</span>
+              </motion.button>
 
-          {/* View Code Button */}
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setShowCodeModal(true)}
-            className="w-12 h-12 bg-notion-card border border-notion-border text-notion-text rounded-full shadow-lg hover:shadow-xl hover:border-notion-accent/50 transition-all duration-200 flex items-center justify-center"
-          >
-            <CodeBracketIcon className="w-5 h-5" />
-          </motion.button>
+              {/* Back to Home */}
+              <motion.button
+                whileHover={{ backgroundColor: '#f8fafc' }}
+                onClick={() => {
+                  handleBackToHome();
+                  setShowSettingsMenu(false);
+                }}
+                className="w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-gray-50 transition-colors border-t border-gray-100"
+              >
+                <HomeIcon className="w-5 h-5 text-purple-600" />
+                <span className="text-gray-800 font-medium">Back to Home</span>
+              </motion.button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-          {/* Copy Code Button */}
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={handleCopyCode}
-            className={`
-              w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center
-              ${copiedCode 
-                ? 'bg-green-500 text-white' 
-                : 'bg-notion-card border border-notion-border text-notion-text hover:border-notion-accent/50'
-              }
-            `}
+        {/* Settings Button */}
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={toggleSettingsMenu}
+          className="w-14 h-14 bg-white text-gray-700 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center border border-gray-200"
+        >
+          <motion.div
+            animate={{ rotate: showSettingsMenu ? 180 : 0 }}
+            transition={{ duration: 0.2 }}
           >
-            {copiedCode ? (
-              <CheckIcon className="w-5 h-5" />
-            ) : (
-              <DocumentDuplicateIcon className="w-5 h-5" />
-            )}
-          </motion.button>
-        </div>
+            <CogIcon className="w-6 h-6" />
+          </motion.div>
+        </motion.button>
       </div>
+
+      {/* Click outside to close settings menu */}
+      {showSettingsMenu && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setShowSettingsMenu(false)}
+        />
+      )}
 
       {/* Modals */}
       <FollowUpModal
