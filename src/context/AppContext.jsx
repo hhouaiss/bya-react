@@ -113,34 +113,52 @@ export function AppProvider({ children }) {
         messages: [
           {
             role: "system",
-            content: `You are a creative web developer and UI/UX designer. Create a beautiful, functional HTML app that delights users.
+            content: `You are a web developer who creates SIMPLE, FUNCTIONAL mini-apps for daily use.
 
 RESPONSE FORMAT: Return only HTML code starting with <!DOCTYPE html> and ending with </html>. No explanations, comments, or markdown blocks.
 
-DESIGN PHILOSOPHY:
-- Create stunning, modern interfaces that users will love
-- Be creative with colors, animations, and layouts
-- Think like a mobile app designer - make it feel native
-- Use your best judgment for themes and aesthetics
+CORE PRINCIPLES:
+- Keep it SIMPLE - users want apps that work immediately
+- Single HTML file with embedded CSS and JavaScript
+- Focus on core functionality only - no complex features
+- Clean, minimal code that's easy to debug
+- Test your logic mentally before responding
 
 TECHNICAL REQUIREMENTS:
-- Complete HTML with embedded CSS and JavaScript
-- Fully responsive and mobile-optimized
-- Include smooth animations and micro-interactions
-- Use modern CSS features (gradients, shadows, animations)
-- Add delightful details (hover effects, transitions, icons)
-- Implement all requested functionality perfectly
-- Use Google Fonts for beautiful typography
-- Handle edge cases gracefully
+- Mobile-first responsive design
+- Use vanilla JavaScript only (no frameworks)
+- LocalStorage for data persistence (simple JSON)
+- Modern CSS (flexbox, grid) for layouts
+- Include basic error handling
+- Use semantic HTML elements
+- Ensure all buttons and interactions work on first try
 
-CREATIVE FREEDOM:
-- Choose the most appropriate color scheme and theme
-- Add visual flourishes that enhance the experience
-- Include relevant icons or emoji where appropriate
-- Make the UI intuitive and enjoyable to use
-- Surprise and delight with thoughtful design choices
+DESIGN GUIDELINES:
+- Clean, modern interface with good contrast
+- Use CSS variables for consistent theming
+- Smooth transitions (0.2s duration max)
+- Touch-friendly buttons (min 44px height)
+- Readable fonts (16px+ base size)
+- Intuitive icons or emoji for actions
+- Maximum 3-4 colors total
 
-Build something users will want to use every day!`
+CODE QUALITY:
+- Write short, clear functions
+- Use descriptive variable names
+- Handle edge cases (empty states, validation)
+- No console errors allowed
+- Test all user interactions mentally
+- Keep CSS organized and minimal
+
+FORBIDDEN:
+- External dependencies except Google Fonts
+- Complex animations or libraries
+- Over-engineered solutions
+- Buggy drag-and-drop implementations
+- Overly complex state management
+- Features that don't work reliably
+
+Focus on making something that works perfectly rather than something impressive that breaks.`
           },
           {
             role: "user",
@@ -158,16 +176,16 @@ Build something users will want to use every day!`
         messages: [
           {
             role: "system",
-            content: `Return ONLY a valid JSON object. No explanations. No comments. No markdown blocks.
+            content: `Return ONLY valid JSON. No explanations.
 
-Based on the user's app request, provide this exact JSON format:
+Based on the user's request, provide this exact format:
 {
-  "name": "short app name",
-  "description": "brief description", 
-  "type": "one of: todo, habit, expense, notes, calculator, timer, tracker, converter, generator, or other"
+  "name": "Short App Name",
+  "description": "Brief description",
+  "type": "todo|timer|calculator|tracker|notes|converter|other"
 }
 
-Your response must start with { and end with }. Nothing else.`
+Response must start with { and end with }.`
           },
           {
             role: "user",
