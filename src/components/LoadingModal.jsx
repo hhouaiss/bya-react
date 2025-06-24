@@ -8,32 +8,41 @@ import { SparklesIcon, CogIcon } from '@heroicons/react/24/outline';
  */
 function LoadingModal({ isOpen, onClose }) {
   const loadingSteps = [
-    'Analyzing your idea...',
-    'Designing the interface...',
-    'Generating code...',
-    'Adding functionality...',
-    'Finalizing your app...'
+    'Initializing AI client...',
+    'Analyzing your prompt...',
+    'Generating complete app code...',
+    'Extracting app metadata...',
+    'Processing and validating data...',
+    'Saving app to your collection...'
   ];
 
   const [currentStep, setCurrentStep] = React.useState(0);
 
-  // Simulate loading progress
+  // Simulate loading progress that matches actual AI process timing
   React.useEffect(() => {
     if (!isOpen) {
       setCurrentStep(0);
       return;
     }
 
-    const interval = setInterval(() => {
-      setCurrentStep(prev => {
-        if (prev < loadingSteps.length - 1) {
-          return prev + 1;
-        }
-        return prev;
-      });
-    }, 800);
+    const stepTimings = [500, 800, 3000, 1500, 800, 600]; // Realistic timings for each step
+    let timeoutId;
+    let currentStepIndex = 0;
 
-    return () => clearInterval(interval);
+    const advanceStep = () => {
+      if (currentStepIndex < loadingSteps.length - 1) {
+        currentStepIndex++;
+        setCurrentStep(currentStepIndex);
+        timeoutId = setTimeout(advanceStep, stepTimings[currentStepIndex]);
+      }
+    };
+
+    // Start the first step
+    timeoutId = setTimeout(advanceStep, stepTimings[0]);
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [isOpen, loadingSteps.length]);
 
   return (
