@@ -109,7 +109,7 @@ export function AppProvider({ children }) {
     
     try {
       const completion = await state.aiClient.chat.completions.create({
-        model: "o4-mini",
+        model: "gpt-4.1",
         messages: [
           {
             role: "system",
@@ -170,7 +170,7 @@ Build something that works perfectly rather than something complex that breaks.`
       
       // Extract app metadata using another AI call
       const metadataCompletion = await state.aiClient.chat.completions.create({
-        model: "o4-mini",
+        model: "gpt-4.1",
         messages: [
           {
             role: "system",
@@ -245,7 +245,7 @@ Response must start with { and end with }.`
       const currentCode = state.generatedApps.get(appId);
       
       const completion = await state.aiClient.chat.completions.create({
-        model: "o4-mini",
+        model: "gpt-4.1",
         messages: [
           {
             role: "system",
