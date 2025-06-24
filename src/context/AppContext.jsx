@@ -108,9 +108,9 @@ export function AppProvider({ children }) {
     dispatch({ type: ActionTypes.SET_GENERATING, payload: true });
     
     try {
-      const completion = await state.aiClient.chat.completions.create({
-        model: "gpt-4.1",
-        messages: [
+      const completion = await state.aiClient.responses.create({
+        model: "o4-mini",
+        input: [
           {
             role: "system",
             content: `You are a web developer who creates BULLETPROOF mini-apps that work perfectly on first try.
@@ -163,15 +163,25 @@ Build something that works perfectly rather than something complex that breaks.`
             content: prompt
           }
         ],
-        temperature: 0.7
+        text: {
+          format: {
+            type: "text"
+          }
+        },
+        reasoning: {
+          effort: "medium",
+          summary: "auto"
+        },
+        tools: [],
+        store: true
       });
 
-      const generatedCode = completion.choices[0].message.content;
+      const generatedCode = completion.output_text;
       
       // Extract app metadata using another AI call
-      const metadataCompletion = await state.aiClient.chat.completions.create({
-        model: "gpt-4.1",
-        messages: [
+      const metadataCompletion = await state.aiClient.responses.create({
+        model: "o4-mini",
+        input: [
           {
             role: "system",
             content: `Return ONLY valid JSON. No explanations.
@@ -190,13 +200,22 @@ Response must start with { and end with }.`
             content: prompt
           }
         ],
-        max_tokens: 150,
-        temperature: 0.3
+        text: {
+          format: {
+            type: "text"
+          }
+        },
+        reasoning: {
+          effort: "low",
+          summary: "auto"
+        },
+        tools: [],
+        store: true
       });
 
       let metadata;
       try {
-        metadata = JSON.parse(metadataCompletion.choices[0].message.content);
+        metadata = JSON.parse(metadataCompletion.output_text);
       } catch {
         // Fallback metadata if JSON parsing fails
         metadata = {
@@ -244,9 +263,9 @@ Response must start with { and end with }.`
     try {
       const currentCode = state.generatedApps.get(appId);
       
-      const completion = await state.aiClient.chat.completions.create({
-        model: "gpt-4.1",
-        messages: [
+      const completion = await state.aiClient.responses.create({
+        model: "o4-mini",
+        input: [
           {
             role: "system",
             content: "You are an expert web developer. Modify the existing HTML app based on the user's request. Return ONLY the complete, updated HTML code."
@@ -256,10 +275,20 @@ Response must start with { and end with }.`
             content: `Here's the current app code:\n\n${currentCode}\n\nPlease modify it to: ${followUpPrompt}`
           }
         ],
-        temperature: 0.7
+        text: {
+          format: {
+            type: "text"
+          }
+        },
+        reasoning: {
+          effort: "medium",
+          summary: "auto"
+        },
+        tools: [],
+        store: true
       });
 
-      const updatedCode = completion.choices[0].message.content;
+      const updatedCode = completion.output_text;
       dispatch({ type: ActionTypes.SET_GENERATED_APP, payload: { id: appId, content: updatedCode } });
       
       return true;
