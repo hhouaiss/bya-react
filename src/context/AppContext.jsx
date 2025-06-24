@@ -213,7 +213,8 @@ Response must start with { and end with }.`
         description: metadata.description,
         type: metadata.type,
         createdAt: new Date().toISOString(),
-        prompt: prompt
+        prompt: prompt,
+        code: generatedCode // Store the generated code with the app data
       };
 
       dispatch({ type: ActionTypes.SET_GENERATED_APP, payload: { id: appId, content: generatedCode } });
