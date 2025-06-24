@@ -109,7 +109,7 @@ export function AppProvider({ children }) {
     
     try {
       const completion = await state.aiClient.chat.completions.create({
-        model: "o3",
+        model: "gpt-4.1",
         messages: [
           {
             role: "system",
@@ -147,7 +147,6 @@ Build something users will want to use every day!`
             content: prompt
           }
         ],
-        max_completion_tokens: 4000,
         temperature: 0.7
       });
 
@@ -227,7 +226,7 @@ Your response must start with { and end with }. Nothing else.`
       const currentCode = state.generatedApps.get(appId);
       
       const completion = await state.aiClient.chat.completions.create({
-        model: "o3",
+        model: "gpt-4.1",
         messages: [
           {
             role: "system",
@@ -238,7 +237,6 @@ Your response must start with { and end with }. Nothing else.`
             content: `Here's the current app code:\n\n${currentCode}\n\nPlease modify it to: ${followUpPrompt}`
           }
         ],
-        max_completion_tokens: 4000,
         temperature: 0.7
       });
 
