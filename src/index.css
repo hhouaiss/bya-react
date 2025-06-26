@@ -17,28 +17,41 @@
 
 @layer components {
   .notion-card {
-    @apply bg-notion-card border border-notion-border rounded-lg p-4 transition-all duration-200 hover:border-notion-accent/50;
+    @apply bg-notion-card border border-notion-border rounded-xl p-6 transition-all duration-300 hover:border-notion-accent/30 hover:bg-notion-card-hover hover:shadow-card-hover;
+  }
+  
+  .notion-card-compact {
+    @apply bg-notion-card border border-notion-border rounded-lg p-4 transition-all duration-300 hover:border-notion-accent/30 hover:bg-notion-card-hover hover:shadow-card;
   }
   
   .notion-button {
-    @apply bg-notion-accent text-white px-4 py-2 rounded-md font-medium transition-all duration-200 hover:bg-notion-accent/80 active:scale-95;
+    @apply bg-notion-accent text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:bg-notion-accent-light active:scale-95 shadow-button hover:shadow-card;
+  }
+  
+  .notion-button-secondary {
+    @apply bg-notion-card border border-notion-border text-notion-text px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:bg-notion-card-hover hover:border-notion-accent/30 active:scale-95;
   }
   
   .notion-input {
-    @apply bg-notion-card border border-notion-border rounded-md px-3 py-2 text-notion-text placeholder-notion-muted focus:border-notion-accent focus:ring-1 focus:ring-notion-accent;
+    @apply bg-notion-card border border-notion-border rounded-lg px-4 py-3 text-notion-text placeholder-notion-muted focus:border-notion-accent focus:ring-2 focus:ring-notion-accent/20 transition-all duration-200;
+  }
+  
+  .notion-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-notion-accent/10 text-notion-accent border border-notion-accent/20;
+  }
+  
+  .notion-badge-success {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-notion-success/10 text-notion-success border border-notion-success/20;
+  }
+  
+  .notion-badge-warning {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-notion-warning/10 text-notion-warning border border-notion-warning/20;
   }
 }
 
-/* Mobile-first responsive design */
-@media (max-width: 768px) {
-  .container {
-    @apply px-4;
-  }
-}
-
-/* Custom scrollbar for mobile */
+/* Enhanced scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -51,4 +64,15 @@
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-notion-muted;
+}
+
+/* Smooth animations */
+* {
+  @apply transition-colors duration-200;
+}
+
+/* Glass effect utility */
+.glass-effect {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
